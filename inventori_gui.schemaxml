@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="latin1" collation="latin1_swedish_ci">inventori-baru</database>
+</source>
+<canvas zoom="80">
+<tables>
+<table name="produk" view="colnames">
+<left>207</left>
+<top>143</top>
+<width>106</width>
+<height>245</height>
+<sql_create_table>CREATE TABLE `produk` (
+  `kode_produk` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_produk` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_kategori` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_merek` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_ukuran` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_satuan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `harga_beli` double(13,2) NOT NULL,
+  `harga_jual` double(13,2) NOT NULL,
+  `hpp` double(13,2) NOT NULL,
+  `stok` double(12,3) NOT NULL,
+  `aktif` tinyint(4) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  `kode_company` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_lokasi` int(11) NOT NULL,
+  PRIMARY KEY (`kode_produk`),
+  KEY `produk_created_by_index` (`created_by`),
+  KEY `produk_updated_by_index` (`updated_by`),
+  KEY `kode_kategori` (`kode_kategori`),
+  KEY `kode_merek` (`kode_merek`),
+  KEY `kode_ukuran` (`kode_ukuran`),
+  KEY `kode_satuan` (`kode_satuan`),
+  KEY `kode_company` (`kode_company`),
+  CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`kode_kategori`) REFERENCES `kategori_produk` (`kode_kategori`),
+  CONSTRAINT `produk_ibfk_2` FOREIGN KEY (`kode_merek`) REFERENCES `merek` (`kode_merek`),
+  CONSTRAINT `produk_ibfk_3` FOREIGN KEY (`kode_ukuran`) REFERENCES `ukuran` (`kode_ukuran`),
+  CONSTRAINT `produk_ibfk_4` FOREIGN KEY (`kode_satuan`) REFERENCES `satuan` (`kode_satuan`),
+  CONSTRAINT `produk_ibfk_5` FOREIGN KEY (`kode_company`) REFERENCES `company` (`kode_company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="ukuran" view="colnames">
+<left>26</left>
+<top>370</top>
+<width>100</width>
+<height>140</height>
+<sql_create_table>CREATE TABLE `ukuran` (
+  `kode_ukuran` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_ukuran` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`kode_ukuran`),
+  KEY `ukuran_created_by_index` (`created_by`),
+  KEY `ukuran_updated_by_index` (`updated_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="merek" view="colnames">
+<left>31</left>
+<top>199</top>
+<width>98</width>
+<height>140</height>
+<sql_create_table>CREATE TABLE `merek` (
+  `kode_merek` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_merek` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`kode_merek`),
+  KEY `merek_created_by_index` (`created_by`),
+  KEY `merek_updated_by_index` (`updated_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="permintaan" view="colnames">
+<left>689</left>
+<top>185</top>
+<width>128</width>
+<height>194</height>
+<sql_create_table>CREATE TABLE `permintaan` (
+  `no_permintaan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deskripsi` varchar(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_permintaan` date DEFAULT NULL,
+  `type` enum('Umum','Mobil','Alat','Jasa','Stok') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `updated_by` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_company` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`no_permintaan`),
+  KEY `kode_company` (`kode_company`),
+  CONSTRAINT `permintaan_ibfk_1` FOREIGN KEY (`kode_company`) REFERENCES `company` (`kode_company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="permintaan_detail" view="colnames">
+<left>557</left>
+<top>226</top>
+<width>106</width>
+<height>181</height>
+<sql_create_table>CREATE TABLE `permintaan_detail` (
+  `no_permintaan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_produk` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_satuan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `qty` double(10,3) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
+  KEY `permintaan_detail_created_by_index` (`created_by`),
+  KEY `permintaan_detail_updated_by_index` (`updated_by`),
+  KEY `no_permintaan` (`no_permintaan`),
+  KEY `kode_produk` (`kode_produk`),
+  KEY `kode_satuan` (`kode_satuan`),
+  CONSTRAINT `permintaan_detail_ibfk_1` FOREIGN KEY (`no_permintaan`) REFERENCES `permintaan` (`no_permintaan`),
+  CONSTRAINT `permintaan_detail_ibfk_2` FOREIGN KEY (`kode_produk`) REFERENCES `produk` (`kode_produk`),
+  CONSTRAINT `permintaan_detail_ibfk_3` FOREIGN KEY (`kode_satuan`) REFERENCES `satuan` (`kode_satuan`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="penerimaan" view="colnames">
+<left>703</left>
+<top>749</top>
+<width>130</width>
+<height>181</height>
+<sql_create_table>CREATE TABLE `penerimaan` (
+  `no_penerimaan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_pembelian` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tanggal_penerimaan` date NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  `kode_company` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`no_penerimaan`),
+  KEY `penerimaan_created_by_index` (`created_by`),
+  KEY `penerimaan_updated_by_index` (`updated_by`),
+  KEY `kode_company` (`kode_company`),
+  KEY `no_pembelian` (`no_pembelian`),
+  CONSTRAINT `penerimaan_ibfk_1` FOREIGN KEY (`kode_company`) REFERENCES `company` (`kode_company`),
+  CONSTRAINT `penerimaan_ibfk_2` FOREIGN KEY (`no_pembelian`) REFERENCES `pembelian` (`no_pembelian`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="penerimaan_detail" view="colnames">
+<left>511</left>
+<top>755</top>
+<width>108</width>
+<height>181</height>
+<sql_create_table>CREATE TABLE `penerimaan_detail` (
+  `no_penerimaan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_produk` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `qty` double(10,3) NOT NULL,
+  `harga` double(13,2) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `penerimaan_detail_created_by_index` (`created_by`),
+  KEY `penerimaan_detail_updated_by_index` (`updated_by`),
+  KEY `no_penerimaan` (`no_penerimaan`),
+  KEY `kode_produk` (`kode_produk`),
+  CONSTRAINT `penerimaan_detail_ibfk_1` FOREIGN KEY (`no_penerimaan`) REFERENCES `penerimaan` (`no_penerimaan`),
+  CONSTRAINT `penerimaan_detail_ibfk_2` FOREIGN KEY (`kode_produk`) REFERENCES `produk` (`kode_produk`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="pemakaian" view="colnames">
+<left>570</left>
+<top>0</top>
+<width>126</width>
+<height>208</height>
+<sql_create_table>CREATE TABLE `pemakaian` (
+  `no_pemakaian` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_permintaan` char(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tanggal_pemakaian` date NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  `kode_company` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` enum('Mobil','Alat','Jasa') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deskripsi` text COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`no_pemakaian`),
+  KEY `pemakaian_created_by_index` (`created_by`),
+  KEY `pemakaian_updated_by_index` (`updated_by`),
+  KEY `no_permintaan` (`no_permintaan`),
+  KEY `kode_company` (`kode_company`),
+  CONSTRAINT `pemakaian_ibfk_1` FOREIGN KEY (`no_permintaan`) REFERENCES `permintaan` (`no_permintaan`),
+  CONSTRAINT `pemakaian_ibfk_2` FOREIGN KEY (`kode_company`) REFERENCES `company` (`kode_company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="pemakaian_detail" view="colnames">
+<left>399</left>
+<top>15</top>
+<width>104</width>
+<height>194</height>
+<sql_create_table>CREATE TABLE `pemakaian_detail` (
+  `no_pemakaian` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_produk` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_satuan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `qty` double(10,3) NOT NULL,
+  `harga` double(13,2) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `no_pemakaian` (`no_pemakaian`),
+  KEY `kode_produk` (`kode_produk`),
+  KEY `kode_satuan` (`kode_satuan`),
+  CONSTRAINT `pemakaian_detail_ibfk_1` FOREIGN KEY (`no_pemakaian`) REFERENCES `pemakaian` (`no_pemakaian`),
+  CONSTRAINT `pemakaian_detail_ibfk_2` FOREIGN KEY (`kode_produk`) REFERENCES `produk` (`kode_produk`),
+  CONSTRAINT `pemakaian_detail_ibfk_3` FOREIGN KEY (`kode_satuan`) REFERENCES `satuan` (`kode_satuan`)
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="kategori_produk" view="colnames">
+<left>31</left>
+<top>18</top>
+<width>106</width>
+<height>154</height>
+<sql_create_table>CREATE TABLE `kategori_produk` (
+  `kode_kategori` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kategori` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`kode_kategori`),
+  KEY `kategori_produk_created_by_index` (`created_by`),
+  KEY `kategori_produk_updated_by_index` (`updated_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="vendor" view="colnames">
+<left>927</left>
+<top>442</top>
+<width>130</width>
+<height>222</height>
+<sql_create_table>CREATE TABLE `vendor` (
+  `kode_vendor` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_vendor` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `telp` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hp` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `npwp` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `termin_pembayaran` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`kode_vendor`),
+  KEY `vendor_created_by_index` (`created_by`),
+  KEY `vendor_updated_by_index` (`updated_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="satuan" view="colnames">
+<left>187</left>
+<top>469</top>
+<width>98</width>
+<height>154</height>
+<sql_create_table>CREATE TABLE `satuan` (
+  `kode_satuan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_satuan` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `updated_by` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`kode_satuan`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="company" view="colnames">
+<left>874</left>
+<top>95</top>
+<width>110</width>
+<height>194</height>
+<sql_create_table>CREATE TABLE `company` (
+  `kode_company` char(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_company` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `telp` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `npwp` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`kode_company`),
+  KEY `company_created_by_index` (`created_by`),
+  KEY `company_updated_by_index` (`updated_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="memo" view="colnames">
+<left>597</left>
+<top>576</top>
+<width>106</width>
+<height>181</height>
+<sql_create_table>CREATE TABLE `memo` (
+  `no_memo` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_permintaan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tanggal_memo` date NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  `kode_company` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`no_memo`),
+  KEY `memo_created_by_index` (`created_by`),
+  KEY `memo_updated_by_index` (`updated_by`),
+  KEY `no_permintaan` (`no_permintaan`),
+  KEY `kode_company` (`kode_company`),
+  CONSTRAINT `memo_ibfk_1` FOREIGN KEY (`no_permintaan`) REFERENCES `permintaan` (`no_permintaan`),
+  CONSTRAINT `memo_ibfk_2` FOREIGN KEY (`kode_company`) REFERENCES `company` (`kode_company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="memo_detail" view="colnames">
+<left>381</left>
+<top>603</top>
+<width>97</width>
+<height>181</height>
+<sql_create_table>CREATE TABLE `memo_detail` (
+  `no_memo` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_produk` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_satuan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `qty` double(10,3) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `kode_produk` (`kode_produk`),
+  KEY `kode_satuan` (`kode_satuan`),
+  KEY `no_memo` (`no_memo`),
+  CONSTRAINT `memo_detail_ibfk_1` FOREIGN KEY (`kode_produk`) REFERENCES `produk` (`kode_produk`),
+  CONSTRAINT `memo_detail_ibfk_2` FOREIGN KEY (`kode_satuan`) REFERENCES `satuan` (`kode_satuan`),
+  CONSTRAINT `memo_detail_ibfk_3` FOREIGN KEY (`no_memo`) REFERENCES `memo` (`no_memo`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="pembelian" view="colnames">
+<left>753</left>
+<top>432</top>
+<width>123</width>
+<height>208</height>
+<sql_create_table>CREATE TABLE `pembelian` (
+  `no_pembelian` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `no_memo` char(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kode_vendor` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tanggal_pembelian` date NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  `kode_company` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_po` enum('Stock','Non Stock','Jasa') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`no_pembelian`),
+  KEY `pembelian_created_by_index` (`created_by`),
+  KEY `pembelian_updated_by_index` (`updated_by`),
+  KEY `no_memo` (`no_memo`),
+  KEY `kode_vendor` (`kode_vendor`),
+  KEY `kode_company` (`kode_company`),
+  CONSTRAINT `pembelian_ibfk_1` FOREIGN KEY (`no_memo`) REFERENCES `memo` (`no_memo`),
+  CONSTRAINT `pembelian_ibfk_2` FOREIGN KEY (`kode_vendor`) REFERENCES `vendor` (`kode_vendor`),
+  CONSTRAINT `pembelian_ibfk_3` FOREIGN KEY (`kode_company`) REFERENCES `company` (`kode_company`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="pembelian_detail" view="colnames">
+<left>474</left>
+<top>400</top>
+<width>101</width>
+<height>194</height>
+<sql_create_table>CREATE TABLE `pembelian_detail` (
+  `no_pembelian` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_produk` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kode_satuan` char(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `qty` double(10,3) NOT NULL,
+  `harga` double(13,2) NOT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pembelian_detail_created_by_index` (`created_by`),
+  KEY `pembelian_detail_updated_by_index` (`updated_by`),
+  KEY `no_pembelian` (`no_pembelian`),
+  KEY `kode_produk` (`kode_produk`),
+  KEY `kode_satuan` (`kode_satuan`),
+  CONSTRAINT `pembelian_detail_ibfk_1` FOREIGN KEY (`no_pembelian`) REFERENCES `pembelian` (`no_pembelian`),
+  CONSTRAINT `pembelian_detail_ibfk_2` FOREIGN KEY (`kode_produk`) REFERENCES `produk` (`kode_produk`),
+  CONSTRAINT `pembelian_detail_ibfk_3` FOREIGN KEY (`kode_satuan`) REFERENCES `satuan` (`kode_satuan`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="users" view="colnames">
+<left>218</left>
+<top>673</top>
+<width>116</width>
+<height>167</height>
+<sql_create_table>CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `kode_company` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`),
+  KEY `kode_company` (`kode_company`),
+  CONSTRAINT `users_ibfk_1` FOREIGN KEY (`kode_company`) REFERENCES `company` (`kode_company`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="master_lokasi" view="colnames">
+<left>43</left>
+<top>535</top>
+<width>94</width>
+<height>181</height>
+<sql_create_table>CREATE TABLE `master_lokasi` (
+  `id_lokasi` int(11) unsigned zerofill NOT NULL,
+  `nama_lokasi` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nickname` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamat` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) unsigned DEFAULT NULL,
+  `updated_by` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id_lokasi`),
+  KEY `master_lokasi_created_by_index` (`created_by`),
+  KEY `master_lokasi_updated_by_index` (`updated_by`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</sql_create_table>
+</table>
+<table name="tb_item_bulanan" view="colnames">
+<left>62</left>
+<top>740</top>
+<width>138</width>
+<height>268</height>
+<sql_create_table>CREATE TABLE `tb_item_bulanan` (
+  `kode_company` char(2) NOT NULL,
+  `periode` date NOT NULL,
+  `kode_produk` varchar(15) NOT NULL,
+  `satuan` varchar(10) NOT NULL,
+  `begin_stock` double(11,3) NOT NULL,
+  `begin_amount` double(20,2) NOT NULL,
+  `in_stock` float(11,3) NOT NULL,
+  `in_amount` double(20,2) NOT NULL,
+  `out_stock` float(11,3) NOT NULL,
+  `out_amount` double(20,2) NOT NULL,
+  `adjustment_stock` int(11) NOT NULL,
+  `adjustment_amount` double(20,2) NOT NULL,
+  `stock_opname` int(11) NOT NULL,
+  `amount_opname` double(20,2) NOT NULL,
+  `ending_stock` float(11,3) NOT NULL,
+  `ending_amount` double(20,2) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_by` int(10) DEFAULT NULL,
+  `updated_by` int(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>

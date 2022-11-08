@@ -1,0 +1,7 @@
+{
+    "require": {
+        "barryvdh/laravel-cors": "^1.0",
+        "guzzlehttp/guzzle": "^6.5",
+        "league/flysystem": "^1.0"
+    }
+}
